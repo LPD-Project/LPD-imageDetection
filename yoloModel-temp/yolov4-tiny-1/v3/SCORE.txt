@@ -1,0 +1,87 @@
+Training 9 hours
+
+ Tensor Cores are used.
+ Last accuracy mAP@0.50 = 22.27 %, best = 23.04 % H5692/6000: loss=0.3 map=0.22 best=0.23 hours left=0.6
+ 5692: 0.338183, 0.386793 avg loss, 0.000026 rate, 5.627036 seconds, 2902920 images, 0.577051 hours left
+Loaded: 0.000109 seconds
+
+
+CUDA-version: 12020 (12020), cuDNN: 8.9.6, CUDNN_HALF=1, GPU count: 1  
+ CUDNN_HALF=1 
+ OpenCV version: 4.5.4
+ 0 : compute_capability = 750, cudnn_half = 1, GPU: Tesla T4 
+net.optimized_memory = 0 
+mini_batch = 1, batch = 6, time_steps = 1, train = 0 
+   layer   filters  size/strd(dil)      input                output
+   0 Create CUDA-stream - 0 
+ Create cudnn-handle 0 
+conv     32       3 x 3/ 2    416 x 416 x   3 ->  208 x 208 x  32 0.075 BF
+   1 conv     64       3 x 3/ 2    208 x 208 x  32 ->  104 x 104 x  64 0.399 BF
+   2 conv     64       3 x 3/ 1    104 x 104 x  64 ->  104 x 104 x  64 0.797 BF
+   3 route  2 		                       1/2 ->  104 x 104 x  32 
+   4 conv     32       3 x 3/ 1    104 x 104 x  32 ->  104 x 104 x  32 0.199 BF
+   5 conv     32       3 x 3/ 1    104 x 104 x  32 ->  104 x 104 x  32 0.199 BF
+   6 route  5 4 	                           ->  104 x 104 x  64 
+   7 conv     64       1 x 1/ 1    104 x 104 x  64 ->  104 x 104 x  64 0.089 BF
+   8 route  2 7 	                           ->  104 x 104 x 128 
+   9 max                2x 2/ 2    104 x 104 x 128 ->   52 x  52 x 128 0.001 BF
+  10 conv    128       3 x 3/ 1     52 x  52 x 128 ->   52 x  52 x 128 0.797 BF
+  11 route  10 		                       1/2 ->   52 x  52 x  64 
+  12 conv     64       3 x 3/ 1     52 x  52 x  64 ->   52 x  52 x  64 0.199 BF
+  13 conv     64       3 x 3/ 1     52 x  52 x  64 ->   52 x  52 x  64 0.199 BF
+  14 route  13 12 	                           ->   52 x  52 x 128 
+  15 conv    128       1 x 1/ 1     52 x  52 x 128 ->   52 x  52 x 128 0.089 BF
+  16 route  10 15 	                           ->   52 x  52 x 256 
+  17 max                2x 2/ 2     52 x  52 x 256 ->   26 x  26 x 256 0.001 BF
+  18 conv    256       3 x 3/ 1     26 x  26 x 256 ->   26 x  26 x 256 0.797 BF
+  19 route  18 		                       1/2 ->   26 x  26 x 128 
+  20 conv    128       3 x 3/ 1     26 x  26 x 128 ->   26 x  26 x 128 0.199 BF
+  21 conv    128       3 x 3/ 1     26 x  26 x 128 ->   26 x  26 x 128 0.199 BF
+  22 route  21 20 	                           ->   26 x  26 x 256 
+  23 conv    256       1 x 1/ 1     26 x  26 x 256 ->   26 x  26 x 256 0.089 BF
+  24 route  18 23 	                           ->   26 x  26 x 512 
+  25 max                2x 2/ 2     26 x  26 x 512 ->   13 x  13 x 512 0.000 BF
+  26 conv    512       3 x 3/ 1     13 x  13 x 512 ->   13 x  13 x 512 0.797 BF
+  27 conv    256       1 x 1/ 1     13 x  13 x 512 ->   13 x  13 x 256 0.044 BF
+  28 conv    512       3 x 3/ 1     13 x  13 x 256 ->   13 x  13 x 512 0.399 BF
+  29 conv     21       1 x 1/ 1     13 x  13 x 512 ->   13 x  13 x  21 0.004 BF
+  30 yolo
+[yolo] params: iou loss: ciou (4), iou_norm: 0.07, obj_norm: 1.00, cls_norm: 1.00, delta_norm: 1.00, scale_x_y: 1.05
+nms_kind: greedynms (1), beta = 0.600000 
+  31 route  27 		                           ->   13 x  13 x 256 
+  32 conv    128       1 x 1/ 1     13 x  13 x 256 ->   13 x  13 x 128 0.011 BF
+  33 upsample                 2x    13 x  13 x 128 ->   26 x  26 x 128
+  34 route  33 23 	                           ->   26 x  26 x 384 
+  35 conv    256       3 x 3/ 1     26 x  26 x 384 ->   26 x  26 x 256 1.196 BF
+  36 conv     21       1 x 1/ 1     26 x  26 x 256 ->   26 x  26 x  21 0.007 BF
+  37 yolo
+[yolo] params: iou loss: ciou (4), iou_norm: 0.07, obj_norm: 1.00, cls_norm: 1.00, delta_norm: 1.00, scale_x_y: 1.05
+nms_kind: greedynms (1), beta = 0.600000 
+Total BFLOPS 6.789 
+avg_outputs = 299797 
+ Allocate additional workspace_size = 26.22 MB 
+Loading weights from backup/custom-yolov4-tiny-detector_best.weights...
+ seen 64, trained: 2346 K-images (36 Kilo-batches_64) 
+Done! Loaded 38 layers from weights-file 
+
+ calculation mAP (mean average precision)...
+ Detection layer: 30 - type = 28 
+ Detection layer: 37 - type = 28 
+224
+ detections_count = 4219, unique_truth_count = 1339  
+class_id = 0, name = person, ap = 16.71%   	 (TP = 42, FP = 151) 
+class_id = 1, name = pigeon, ap = 29.36%   	 (TP = 401, FP = 373) 
+
+ for conf_thresh = 0.25, precision = 0.46, recall = 0.33, F1-score = 0.38 
+ for conf_thresh = 0.25, TP = 443, FP = 524, FN = 896, average IoU = 30.96 % 
+
+ IoU threshold = 50 %, used Area-Under-Curve for each unique Recall 
+ mean average precision (mAP@0.50) = 0.230393, or 23.04 % 
+Total Detection Time: 1 Seconds
+
+Set -points flag:
+ `-points 101` for MS COCO 
+ `-points 11` for PascalVOC 2007 (uncomment `difficult` in voc.data) 
+ `-points 0` (AUC) for ImageNet, PascalVOC 2010-2012, your custom dataset
+
+

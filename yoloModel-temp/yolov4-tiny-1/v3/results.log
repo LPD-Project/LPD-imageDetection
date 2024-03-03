@@ -1,0 +1,28 @@
+ CUDNN_HALF=1 
+net.optimized_memory = 0 
+mini_batch = 1, batch = 6, time_steps = 1, train = 0 
+Create CUDA-stream - 0 
+ Create cudnn-handle 0 
+nms_kind: greedynms (1), beta = 0.600000 
+nms_kind: greedynms (1), beta = 0.600000 
+
+ seen 64, trained: 2346 K-images (36 Kilo-batches_64) 
+
+ calculation mAP (mean average precision)...
+ Detection layer: 30 - type = 28 
+ Detection layer: 37 - type = 28 
+
+ detections_count = 4219, unique_truth_count = 1339  
+ rank = 0 of ranks = 4219  rank = 100 of ranks = 4219  rank = 200 of ranks = 4219  rank = 300 of ranks = 4219  rank = 400 of ranks = 4219  rank = 500 of ranks = 4219  rank = 600 of ranks = 4219  rank = 700 of ranks = 4219  rank = 800 of ranks = 4219  rank = 900 of ranks = 4219  rank = 1000 of ranks = 4219  rank = 1100 of ranks = 4219  rank = 1200 of ranks = 4219  rank = 1300 of ranks = 4219  rank = 1400 of ranks = 4219  rank = 1500 of ranks = 4219  rank = 1600 of ranks = 4219  rank = 1700 of ranks = 4219  rank = 1800 of ranks = 4219  rank = 1900 of ranks = 4219  rank = 2000 of ranks = 4219  rank = 2100 of ranks = 4219  rank = 2200 of ranks = 4219  rank = 2300 of ranks = 4219  rank = 2400 of ranks = 4219  rank = 2500 of ranks = 4219  rank = 2600 of ranks = 4219  rank = 2700 of ranks = 4219  rank = 2800 of ranks = 4219  rank = 2900 of ranks = 4219  rank = 3000 of ranks = 4219  rank = 3100 of ranks = 4219  rank = 3200 of ranks = 4219  rank = 3300 of ranks = 4219  rank = 3400 of ranks = 4219  rank = 3500 of ranks = 4219  rank = 3600 of ranks = 4219  rank = 3700 of ranks = 4219  rank = 3800 of ranks = 4219  rank = 3900 of ranks = 4219  rank = 4000 of ranks = 4219  rank = 4100 of ranks = 4219  rank = 4200 of ranks = 4219 class_id = 0, name = person, ap = 16.71%   	 (TP = 42, FP = 151) 
+class_id = 1, name = pigeon, ap = 29.36%   	 (TP = 401, FP = 373) 
+
+ for conf_thresh = 0.25, precision = 0.46, recall = 0.33, F1-score = 0.38 
+ for conf_thresh = 0.25, TP = 443, FP = 524, FN = 896, average IoU = 30.96 % 
+
+ IoU threshold = 50 %, used Area-Under-Curve for each unique Recall 
+ mean average precision (mAP@0.50) = 0.230393, or 23.04 % 
+
+Set -points flag:
+ `-points 101` for MS COCO 
+ `-points 11` for PascalVOC 2007 (uncomment `difficult` in voc.data) 
+ `-points 0` (AUC) for ImageNet, PascalVOC 2010-2012, your custom dataset
