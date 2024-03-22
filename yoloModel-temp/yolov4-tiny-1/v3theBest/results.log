@@ -1,0 +1,29 @@
+ CUDNN_HALF=1 
+net.optimized_memory = 0 
+mini_batch = 1, batch = 1, time_steps = 1, train = 0 
+Create CUDA-stream - 0 
+ Create cudnn-handle 0 
+nms_kind: diounms (2), beta = 0.600000 
+nms_kind: diounms (2), beta = 0.600000 
+nms_kind: diounms (2), beta = 0.600000 
+
+ seen 64, trained: 32 K-images (0 Kilo-batches_64) 
+
+ calculation mAP (mean average precision)...
+ Detection layer: 90 - type = 28 
+ Detection layer: 94 - type = 28 
+ Detection layer: 98 - type = 28 
+
+ detections_count = 63, unique_truth_count = 26  
+ rank = 0 of ranks = 63 class_id = 0, name = pigeon, ap = 48.91%   	 (TP = 7, FP = 1) 
+
+ for conf_thresh = 0.25, precision = 0.88, recall = 0.27, F1-score = 0.41 
+ for conf_thresh = 0.25, TP = 7, FP = 1, FN = 19, average IoU = 59.78 % 
+
+ IoU threshold = 50 %, used Area-Under-Curve for each unique Recall 
+ mean average precision (mAP@0.50) = 0.489117, or 48.91 % 
+
+Set -points flag:
+ `-points 101` for MS COCO 
+ `-points 11` for PascalVOC 2007 (uncomment `difficult` in voc.data) 
+ `-points 0` (AUC) for ImageNet, PascalVOC 2010-2012, your custom dataset
