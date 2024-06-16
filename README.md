@@ -45,6 +45,6 @@ You cannot have both versions of the runtime installed at the same time, but you
 
 Caution: When operating the device using the maximum clock frequency, the metal on the USB Accelerator can become very hot to the touch. This might cause burn injuries. To avoid injury, either keep the device out of reach when operating it at maximum frequency, or use the reduced clock frequency.
 
-ref: https://coral.ai/docs/accelerator/get-started/#1-install-the-edge-tpu-runtime
+ref: [https://coral.ai/docs/accelerator/get-started/#1-install-the-edge-tpu-runtime](https://coral.ai/docs/accelerator/get-started/#runtime-on-linux)
 
 
