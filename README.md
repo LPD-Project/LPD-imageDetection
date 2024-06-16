@@ -1,6 +1,33 @@
 Model and code imageDectection
 ---Raspberry pi4 Model B + Google coral USB----
 
+<h1>-------การเปิดใช้งาน Environment----------------</h1>
+*เปิด terminal*
+cd Desktop
+--------
+yolo
+# เปิด environment ของ yolo
+source ~/yolo/bin/activate
+
+# เปลี่ยน directory ไปยังตำแหน่งที่ต้องการ (yolo)
+cd ~/laser-detect/yoloDetect/real
+
+# รัน Python
+python ... .py
+เ
+-------
+tensorflow
+
+เปิด environment ของ tensorflow
+source ~/tflite/bin/activate
+
+# เปลี่ยน directory ไปยังตำแหน่งที่ต้องการ (tensorflow)
+cd ~/laser-detect/tensorflowDetect/real/
+
+# รัน Python
+python ... .py
+
+-------------------------------------
 วิธีสั่งให้ Google coral ทำงานสูงสุด (ยังไม่ได้ลอง กลัวไหม้)
 
 **สามารถทำได้ใน terminal ของ Env ที่เปิดได้เลย
