@@ -6,7 +6,8 @@ Model and code imageDectection
 cd Desktop
 --------
 # yolo
-# เปิด environment ของ yolo
+
+เปิด environment ของ yolo
 source ~/yolo/bin/activate
 
 # เปลี่ยน directory ไปยังตำแหน่งที่ต้องการ (yolo)
