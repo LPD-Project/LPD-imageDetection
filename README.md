@@ -5,7 +5,7 @@ Model and code imageDectection
 *เปิด terminal*
 cd Desktop
 --------
-yolo
+#yolo
 # เปิด environment ของ yolo
 source ~/yolo/bin/activate
 
@@ -14,9 +14,9 @@ cd ~/laser-detect/yoloDetect/real
 
 # รัน Python
 python ... .py
-เ
+
 -------
-tensorflow
+#tensorflow
 
 เปิด environment ของ tensorflow
 source ~/tflite/bin/activate
