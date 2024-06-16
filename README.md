@@ -47,4 +47,6 @@ Caution: When operating the device using the maximum clock frequency, the metal 
 
 ref: [https://coral.ai/docs/accelerator/get-started/#1-install-the-edge-tpu-runtime](https://coral.ai/docs/accelerator/get-started/#runtime-on-linux)
 
+ref: https://aiyprojects.withgoogle.com/maker/#project-overview
+
 
