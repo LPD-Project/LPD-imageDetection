@@ -1,17 +1,3 @@
-# Copyright 2021 The TensorFlow Authors. All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-"""Main script to run the object detection routine."""
 import argparse
 import sys
 import time
@@ -23,13 +9,13 @@ from tflite_support.task import vision
 
 def visualize(image, detection_result):
     for detection in detection_result.detections:
-        # Draw bounding box
+        # วาดกรอบสี่เหลี่ยมรอบวัตถุ
         bbox = detection.bounding_box
         start_point = (int(bbox.origin_x), int(bbox.origin_y))
         end_point = (int(bbox.origin_x + bbox.width), int(bbox.origin_y + bbox.height))
         cv2.rectangle(image, start_point, end_point, (0, 255, 0), 2)
         
-        # Draw label and score
+        # วาดชื่อวัตถุและคะแนนความเชื่อมั่น
         category = detection.categories[0]
         class_name = category.category_name
         score = round(category.score, 2)
@@ -39,40 +25,37 @@ def visualize(image, detection_result):
         
     return image
 
-
 def run(model: str, camera_id: str, width: int, height: int, num_threads: int,
         enable_edgetpu: bool) -> None:
-  """Continuously run inference on images acquired from the camera.
+  """รันการตรวจจับวัตถุอย่างต่อเนื่องบนภาพที่ได้จากกล้อง
 
   Args:
-    model: Name of the TFLite object detection model.
-    camera_id: The camera id to be passed to OpenCV.
-    width: The width of the frame captured from the camera.
-    height: The height of the frame captured from the camera.
-    num_threads: The number of CPU threads to run the model.
-    enable_edgetpu: True/False whether the model is a EdgeTPU model.
+    model: ชื่อของโมเดล TFLite สำหรับการตรวจจับวัตถุ
+    camera_id: ID ของกล้องที่จะใช้กับ OpenCV
+    width: ความกว้างของเฟรมที่จับจากกล้อง
+    height: ความสูงของเฟรมที่จับจากกล้อง
+    num_threads: จำนวน threads ของ CPU ที่จะใช้รันโมเดล
+    enable_edgetpu: True/False ระบุว่าโมเดลนี้ใช้ EdgeTPU หรือไม่
   """
 
-  # Variables to calculate FPS
+  # ตัวแปรสำหรับคำนวณ FPS
   counter, fps = 0, 0
   start_time = time.time()
 
-  # Start capturing video input from the camera
+  # เริ่มจับภาพวิดีโอจากกล้อง
   cap = cv2.VideoCapture("manyObject.mp4") #---------------------
   cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
-  #CAP_PROP_FRAME_WIDTH
   cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
-  #CAP_PROP_FRAME_HEIGHT
 
-  # Visualization parameters
-  row_size = 20  # pixels
-  left_margin = 24  # pixels
-  text_color = (0, 0, 255)  # red
+  # พารามิเตอร์สำหรับการแสดงผล
+  row_size = 20  # พิกเซล
+  left_margin = 24  # พิกเซล
+  text_color = (0, 0, 255)  # สีแดง
   font_size = 1
   font_thickness = 1
   fps_avg_frame_count = 10
 
-  # Initialize the object detection model
+  # เริ่มต้นโมเดลการตรวจจับวัตถุ
   base_options = core.BaseOptions(
       file_name=model, use_coral=enable_edgetpu, num_threads=num_threads)
   detection_options = processor.DetectionOptions(
@@ -81,42 +64,42 @@ def run(model: str, camera_id: str, width: int, height: int, num_threads: int,
       base_options=base_options, detection_options=detection_options)
   detector = vision.ObjectDetector.create_from_options(options)
 
-  # Continuously capture images from the camera and run inference
+  # จับภาพจากกล้องและรันการตรวจจับวัตถุอย่างต่อเนื่อง
   while cap.isOpened():
     success, image = cap.read()
     if not success:
       sys.exit(
-          'ERROR: Unable to read from webcam. Please verify your webcam settings.'
+          'ERROR: ไม่สามารถอ่านจากกล้องได้ กรุณาตรวจสอบการตั้งค่ากล้อง.'
       )
 
     counter += 1
-#    image = cv2.flip(image, 1)
-    # Convert the image from BGR to RGB as required by the TFLite model.
+    # image = cv2.flip(image, 1)
+    # แปลงภาพจาก BGR เป็น RGB ตามที่โมเดล TFLite ต้องการ
     rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-    # Create a TensorImage object from the RGB image.
+    # สร้างวัตถุ TensorImage จากภาพ RGB
     input_tensor = vision.TensorImage.create_from_array(rgb_image)
 
-    # Run object detection estimation using the model.
+    # รันการตรวจจับวัตถุด้วยโมเดล
     detection_result = detector.detect(input_tensor)
 
-    # Draw keypoints and edges on input image
+    # วาดกรอบและข้อมูลบนภาพ
     image = visualize(image, detection_result)
 
-    # Calculate the FPS
+    # คำนวณค่า FPS
     if counter % fps_avg_frame_count == 0:
       end_time = time.time()
       fps = fps_avg_frame_count / (end_time - start_time)
       start_time = time.time()
 
-    # Show the FPS
+    # แสดงค่า FPS
     fps_text = 'FPS = {:.1f}'.format(fps)
-    #text_location = (left_margin, row_size)
-    #cv2.putText(image, fps_text, text_location, cv2.FONT_HERSHEY_PLAIN,
-    #            font_size, text_color, font_thickness)
+    # text_location = (left_margin, row_size)
+    # cv2.putText(image, fps_text, text_location, cv2.FONT_HERSHEY_PLAIN,
+    #             font_size, text_color, font_thickness)
     print(f"FPS: {fps_text}")
 
-    # Stop the program if the ESC key is pressed.
+    # หยุดโปรแกรมหากกดปุ่ม ESC
     if cv2.waitKey(1) == 27:
       break
     cv2.namedWindow("object_detector", cv2.WINDOW_NORMAL) 
@@ -126,38 +109,37 @@ def run(model: str, camera_id: str, width: int, height: int, num_threads: int,
   cap.release()
   cv2.destroyAllWindows()
 
-
 def main():
   parser = argparse.ArgumentParser(
       formatter_class=argparse.ArgumentDefaultsHelpFormatter)
   parser.add_argument(
       '--model',
-      help='Path of the object detection model.',
+      help='Path ของโมเดลการตรวจจับวัตถุ.',
       required=False,
       default='./models/bestEF0v2_edgetpu.tflite') #--------
   parser.add_argument(
-      '--cameraId', help='Id of camera.', required=False,  default=0)
+      '--cameraId', help='ID ของกล้อง.', required=False, default=0)
   parser.add_argument(
       '--frameWidth',
-      help='Width of frame to capture from camera.',
+      help='ความกว้างของเฟรมที่จะจับจากกล้อง.',
       required=False,
       type=int,
       default=640)
   parser.add_argument(
       '--frameHeight',
-      help='Height of frame to capture from camera.',
+      help='ความสูงของเฟรมที่จะจับจากกล้อง.',
       required=False,
       type=int,
       default=480)
   parser.add_argument(
       '--numThreads',
-      help='Number of CPU threads to run the model.',
+      help='จำนวน threads ของ CPU ที่จะใช้รันโมเดล.',
       required=False,
       type=int,
       default=4)
   parser.add_argument(
       '--enableEdgeTPU',
-      help='Whether to run the model on EdgeTPU.',
+      help='ระบุว่าจะรันโมเดลบน EdgeTPU หรือไม่.',
       action='store_true',
       required=False,
       default=True)
@@ -165,7 +147,6 @@ def main():
 
   run(args.model, str(args.cameraId), args.frameWidth, args.frameHeight,
       int(args.numThreads), bool(args.enableEdgeTPU))
-
 
 if __name__ == '__main__':
   main()
