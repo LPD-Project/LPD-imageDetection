@@ -28,16 +28,18 @@ while True:
         continue
 
     results = model.predict(frame, imgsz=512 ,iou = 0)
-    a = results[0].boxes.data
+    a = results[0].boxes.data  #ข้อมูลที่ตรวจจับได้ทั้งหมด เป็น type torch.tensor
     px = pd.DataFrame(a).astype("float")
-#แจกแจงวัตถุทีละอัน
-    for index, row in px.iterrows():   
-        x1 = int(row[0])
-        y1 = int(row[1])
-        x2 = int(row[2])
-        y2 = int(row[3])
-        d = int(row[5])
-        c = class_list[d]
+
+    for index, row in px.iterrows(): #จำแนกวัตุทีละวัตถุ
+        print(f'{index} {row}') 
+        x1 = int(row[0]) #xซ้ายบน
+        y1 = int(row[1]) #yซ้ายบน
+        x2 = int(row[2]) #xขวาล่าง
+        y2 = int(row[3]) #yขวาล่าง
+        p = float(row[4]) #ค่าความเชื่อมั่น 
+        d = int(row[5]) #ประเภทของวัตถุ(ตัวเลข)
+        c = class_list[d] #ประเภทของวัตถุ(แปลงเป็นตัวอักษร)
 
         cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
         cvzone.putTextRect(frame, f'{c}', (x1, y1), 1, 1)
