@@ -7,8 +7,10 @@ from pycoral.utils.edgetpu import make_interpreter
 from pycoral.utils.edgetpu import run_inference
 import collections
 
+# สร้าง object เพื่อเก็บข้อมูล label, score, bbox
 Object = collections.namedtuple('Object', ['label', 'score', 'bbox'])
 
+# ฟังก์ชั่นสำหรับการแบ่งภาพออกเป็นส่วน ๆ (tiles)
 def tiles_location_gen(img_size, tile_size, overlap):
     tile_width, tile_height = tile_size
     img_width, img_height = img_size
@@ -22,6 +24,7 @@ def tiles_location_gen(img_size, tile_size, overlap):
             ymax = min(img_height, h + tile_height)
             yield [xmin, ymin, xmax, ymax]
 
+# ฟังก์ชั่นสำหรับจัดตำแหน่ง bounding box ให้ตรงกับตำแหน่งในภาพใหญ่
 def reposition_bounding_box(bbox, tile_location):
     bbox[0] = bbox[0] + tile_location[0]
     bbox[1] = bbox[1] + tile_location[1]
@@ -40,6 +43,7 @@ class Detector:
         self.tile_overlap = tile_overlap
         self.iou_threshold = iou_threshold
 
+        # โหลดโมเดลและ labels
         print(f'Loading {self.model_path} with {self.labels_path} labels.')
         self.interpreter = make_interpreter(self.model_path)
         self.interpreter.allocate_tensors()
@@ -47,8 +51,8 @@ class Detector:
         self.inference_size = input_size(self.interpreter)
 
     def run(self):
-        #cap = cv2.VideoCapture(self.camera_idx) 
-        cap = cv2.VideoCapture("manyObject.mp4") #*****
+        # cap = cv2.VideoCapture(self.camera_idx) 
+        cap = cv2.VideoCapture("manyObject.mp4") # ใช้ไฟล์วีดีโอ "manyObject.mp4"
         cap.set(3, 1920)
         cap.set(4, 1080)
         
@@ -58,6 +62,7 @@ class Detector:
             if not ret:
                 break
 
+            # รวบรวมข้อมูลของวัตถุทั้งหมดที่ตรวจจับได้
             objects_by_label = dict()
             img_size = (frame.shape[1], frame.shape[0])
             for tile_location in tiles_location_gen(img_size, self.tile_size, self.tile_overlap):
@@ -73,6 +78,7 @@ class Detector:
                     label = self.labels.get(obj.id, '')
                     objects_by_label.setdefault(label, []).append(Object(label, obj.score, bbox))
 
+            # แสดงผลวัตถุที่ตรวจจับได้
             for label, objects in objects_by_label.items():
                 idxs = self.non_max_suppression(objects, self.iou_threshold)
                 for idx in idxs:
@@ -95,6 +101,7 @@ class Detector:
         cap.release()
         cv2.destroyAllWindows()
 
+    # ฟังก์ชั่น Non-Max Suppression (NMS) สำหรับการเลือก bounding boxes ที่ดีที่สุด
     def non_max_suppression(self, objects, threshold):
         if len(objects) == 1:
             return [0]
@@ -105,6 +112,7 @@ class Detector:
         xmaxs = boxes[:, 2]
         ymaxs = boxes[:, 3]
 
+        # คำนวณพื้นที่ของ bounding boxes
         areas = (xmaxs - xmins) * (ymaxs - ymins)
         scores = [o.score for o in objects]
         idxs = np.argsort(scores)
@@ -114,6 +122,7 @@ class Detector:
             selected_idx = idxs[-1]
             selected_idxs.append(selected_idx)
 
+            # คำนวณพื้นที่ทับซ้อน (overlap) ระหว่าง bounding box
             overlapped_xmins = np.maximum(xmins[selected_idx], xmins[idxs[:-1]])
             overlapped_ymins = np.maximum(ymins[selected_idx], ymins[idxs[:-1]])
             overlapped_xmaxs = np.minimum(xmaxs[selected_idx], xmaxs[idxs[:-1]])
@@ -130,6 +139,7 @@ class Detector:
                 idxs, np.concatenate(([len(idxs) - 1], np.where(ious > threshold)[0])))
 
         return selected_idxs
+
 import os
 default_model_dir = './models'
 default_model = 'bestEF0v2_edgetpu.tflite'
@@ -138,11 +148,11 @@ if __name__ == '__main__':
     detector = Detector(
         model_path=os.path.join(default_model_dir, default_model),
         labels_path=os.path.join(default_model_dir, default_labels),
-        top_k=0, #*************
-        camera_idx=0, #*************
-        threshold=0.4, #*************
-        tile_size=(224, 224), #*************
-        tile_overlap=0, #*************
-        iou_threshold=0.4 #*************
+        top_k=0, # จำนวนสูงสุดของวัตถุที่จะแสดงผล (กำหนด 0 เพื่อแสดงผลทั้งหมด)
+        camera_idx=0, # ดัชนีกล้อง (ในกรณีที่ใช้กล้อง)
+        threshold=0.4, # ค่าความมั่นใจขั้นต่ำสำหรับการตรวจจับวัตถุ
+        tile_size=(224, 224), # ขนาดของ tiles
+        tile_overlap=0, # ขนาดการทับซ้อนระหว่าง tiles
+        iou_threshold=0.4 # ค่าขั้นต่ำของ IoU สำหรับ Non-Max Suppression
     )
     detector.run()
