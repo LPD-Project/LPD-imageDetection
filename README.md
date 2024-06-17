@@ -3,16 +3,17 @@ Model and code imageDectection
 
 <h1>-------การเปิดใช้งาน Environment----------------</h1>
 *เปิด terminal*
-cd Desktop
+
+```cd Desktop```
 
 -------
 # yolo
 
 เปิด environment ของ yolo
-source ~/yolo/bin/activate
+```source ~/yolo/bin/activate```
 
 # เปลี่ยน directory ไปยังตำแหน่งที่ต้องการ (yolo)
-cd ~/laser-detect/yoloDetect/real
+```cd ~/laser-detect/yoloDetect/real```
 
 # รัน Python
 python ... .py
@@ -21,13 +22,13 @@ python ... .py
 # tensorflow
 
 เปิด environment ของ tensorflow
-source ~/tflite/bin/activate
+```source ~/tflite/bin/activate```
 
 # เปลี่ยน directory ไปยังตำแหน่งที่ต้องการ (tensorflow)
 cd ~/laser-detect/tensorflowDetect/real/
 
 # รัน Python
-python ... .py
+```python ... .py```
 
 -------------------------------------
 วิธีสั่งให้ Google coral ทำงานสูงสุด (ยังไม่ได้ลอง กลัวไหม้)
