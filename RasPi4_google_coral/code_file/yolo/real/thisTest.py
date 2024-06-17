@@ -30,8 +30,8 @@ while True:
     results = model.predict(frame, imgsz=512 ,iou = 0)
     a = results[0].boxes.data
     px = pd.DataFrame(a).astype("float")
-
-    for index, row in px.iterrows():
+#แจกแจงวัตถุทีละอัน
+    for index, row in px.iterrows():   
         x1 = int(row[0])
         y1 = int(row[1])
         x2 = int(row[2])
