@@ -2,6 +2,41 @@ Model and code imageDectection
 ---Raspberry pi4 Model B + Google coral USB----
 
 
+
+    #**set resolution webcam 
+    cap.set(3,1280)
+    cap.set(4,768)
+    """
+     320,240 // 30 FPS
+     640,480 // 30 FPS
+     800,600 // 20 FPS
+     960,540 // 15 FPS
+     1024,768 // 15 FPS
+     1280,720 // 10 FPS
+     1280,960 // 5 FPS
+     1920,1080 // 5 FPS
+     2560,1440 // ??? 
+     """
+    #**more info
+    # $ v4l2-ctl -d /dev/video0 --list-formats-ext
+    """ 
+    [0]: 'MJPG' (Motion-JPEG, compressed)
+        Size: Discrete 2560x1440
+		Size: Discrete 1920x1080
+		Size: Discrete 1280x960
+		Size: Discrete 1280x720
+		Size: Discrete 1024x768
+		Size: Discrete 960x540
+		Size: Discrete 800x600
+        Size: Discrete 640x480
+		Size: Discrete 320x240
+        Size: Discrete 160x120
+		
+
+    """
+    
+
+
 <h2>*******ไฟล์โค้ดที่มีชื่อ Tail คือการ ตรวจจับระยะไกล ที่จะทำงานช้ากว่า</h2>
 <h1>-------การเปิดใช้งาน Environment----------------</h1>
 *เปิด terminal*
